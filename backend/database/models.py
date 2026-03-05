@@ -22,13 +22,15 @@ class RecomendacionIA(enum.Enum):
 class Solicitud(Base):
     __tablename__ = "solicitudes"
 
-    id = Column(String(36), primary_key=True, default=generate_uuid)
-    nombre = Column(String(200), nullable=False)
-    producto_solicitado = Column(String(100), nullable=False)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    nombres = Column(String(100), nullable=False)
+    apellido_paterno = Column(String(100), nullable=False)
+    apellido_materno = Column(String(100), nullable=True)
+    producto_solicitado = Column(String(50), nullable=False)
     aceptacion_privacidad = Column(Boolean, nullable=False, default=True)
     autorizacion_buro = Column(Boolean, nullable=False, default=True)
     
-    curp = Column(String(18), unique=True, nullable=False)
+    curp = Column(String(18), nullable=False)
     fecha_nacimiento = Column(Date, nullable=False)
     nacionalidad = Column(String(100))
     estado_civil = Column(String(50))
@@ -51,6 +53,7 @@ class Solicitud(Base):
     estado_proceso = Column(Enum(EstadoSolicitud), default=EstadoSolicitud.PENDIENTE)
     score_riesgo_ia = Column(Numeric(5, 2), nullable=True)
     recomendacion_ia = Column(Enum(RecomendacionIA), nullable=True)
+    ia_razon_revision = Column(String(500), nullable=True)
     limite_credito = Column(Numeric(12, 2), nullable=True)
     
     fecha_creacion = Column(DateTime(timezone=True), server_default=func.now())

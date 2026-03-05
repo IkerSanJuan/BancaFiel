@@ -10,7 +10,8 @@ export default function CreditWizard() {
     const [result, setResult] = useState(null);
 
     const [formData, setFormData] = useState({
-        nombre: '', producto_solicitado: 'Préstamo Personal',
+        nombres: '', apellido_paterno: '', apellido_materno: '',
+        producto_solicitado: 'Préstamo Personal',
         monto_solicitado: 10000, plazo_meses: 12, motivo_credito: 'Remodelación de hogar',
         aceptacion_privacidad: true, autorizacion_buro: true,
         curp: '', fecha_nacimiento: '', nacionalidad: 'Mexicana',
@@ -125,8 +126,16 @@ export default function CreditWizard() {
                         <h3 style={{ color: 'var(--primary)', marginBottom: '10px' }}>Datos Personales</h3>
                     </div>
                     <div className="input-group">
-                        <label className="input-label">Nombre Completo</label>
-                        <input type="text" name="nombre" className="input-field" placeholder="Juan Pérez" value={formData.nombre} onChange={handleTextChange} />
+                        <label className="input-label">Nombre(s)</label>
+                        <input type="text" name="nombres" className="input-field" placeholder="Juan" value={formData.nombres} onChange={handleTextChange} />
+                    </div>
+                    <div className="input-group">
+                        <label className="input-label">Apellido Paterno</label>
+                        <input type="text" name="apellido_paterno" className="input-field" placeholder="Pérez" value={formData.apellido_paterno} onChange={handleTextChange} />
+                    </div>
+                    <div className="input-group">
+                        <label className="input-label">Apellido Materno</label>
+                        <input type="text" name="apellido_materno" className="input-field" placeholder="López (Opcional)" value={formData.apellido_materno} onChange={handleTextChange} />
                     </div>
                     <div className="input-group">
                         <label className="input-label">CURP (18 caract.)</label>
@@ -204,6 +213,25 @@ export default function CreditWizard() {
                         <h4>Identificación Oficial - REVERSO</h4>
                         <p style={{ marginTop: '5px', color: 'var(--text-secondary)' }}>{files.ine_back ? files.ine_back.name : 'Haz clic para subir un PDF o Imagen'}</p>
                         <input type="file" id="ine_back" style={{ display: 'none' }} onChange={handleFileChange('ine_back')} />
+                    </div>
+
+                    <div className="file-dropzone" onClick={() => document.getElementById('comprobante_dom').click()}>
+                        <UploadCloud size={40} color="var(--primary)" style={{ margin: '0 auto 15px' }} />
+                        <h4>Comprobante de Domicilio</h4>
+                        <p style={{ marginTop: '5px', color: 'var(--text-secondary)' }}>{files.comprobante_dom ? files.comprobante_dom.name : 'No mayor a 3 meses (PDF o Imagen)'}</p>
+                        <input type="file" id="comprobante_dom" style={{ display: 'none' }} onChange={handleFileChange('comprobante_dom')} />
+                    </div>
+
+                    <div style={{ marginTop: '20px', padding: '15px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+                            <input
+                                type="checkbox"
+                                checked={formData.autorizacion_buro}
+                                onChange={(e) => setFormData({ ...formData, autorizacion_buro: e.target.checked })}
+                                style={{ width: '18px', height: '18px', accentColor: 'var(--primary)' }}
+                            />
+                            <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Autorizo a BancaFiel a consultar mi historial en el Buró de Crédito y acepto Aviso de Privacidad.</span>
+                        </label>
                     </div>
                 </div>
             )}

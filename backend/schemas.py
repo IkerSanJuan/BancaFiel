@@ -40,7 +40,9 @@ class Documentacion(DocumentacionBase):
 
 # --- Schemas de Solicitud ---
 class SolicitudBase(BaseModel):
-    nombre: str
+    nombres: str
+    apellido_paterno: str
+    apellido_materno: Optional[str] = None
     producto_solicitado: str
     aceptacion_privacidad: bool
     autorizacion_buro: bool
@@ -69,6 +71,7 @@ class Solicitud(SolicitudBase):
     estado_proceso: EstadoSolicitud
     score_riesgo_ia: Optional[float] = None
     recomendacion_ia: Optional[RecomendacionIA] = None
+    ia_razon_revision: Optional[str] = None
     limite_credito: Optional[float] = None
     direccion: Optional[Direccion] = None
     documentos: List[Documentacion] = []
