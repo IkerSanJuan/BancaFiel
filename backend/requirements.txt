@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+sqlalchemy
+pg8000
+pytesseract
+pdf2image
+scikit-learn
+python-multipart
+pydantic
+pydantic-settings
+email-validator
