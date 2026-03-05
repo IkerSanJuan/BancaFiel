@@ -130,6 +130,16 @@ async def create_solicitud(
         num_dependientes=db_solicitud.dependientes_economicos
     )
 
+    # Capa de Defensa: Hard Rules
+    # Si la IA los pre-aprueba, se puede invalidar por sentido común de negocio
+    if recomendacion == RecomendacionIA.PRE_APROBADA:
+        if edad_anios < 21 or edad_anios > 70:
+            recomendacion = RecomendacionIA.REVISION_MANUAL
+        elif db_solicitud.antiguedad_laboral_meses < 6:
+            recomendacion = RecomendacionIA.REVISION_MANUAL
+        elif db_solicitud.ingreso_mensual_neto < 10000:
+            recomendacion = RecomendacionIA.REVISION_MANUAL
+
     db_solicitud.score_riesgo_ia = score
     db_solicitud.recomendacion_ia = recomendacion
     
@@ -138,14 +148,14 @@ async def create_solicitud(
         if db_solicitud.producto_solicitado == "Préstamo Personal":
             db_solicitud.limite_credito = db_solicitud.monto_solicitado # Aprueba lo solicitado si pasa la IA
         else:
-            # Lógica original de Tarjeta de Crédito
+            # Lógica estricta de Tarjeta de Crédito (Reducción de Límites Originales)
             ingreso = float(db_solicitud.ingreso_mensual_neto)
             if ingreso >= 20000:
                 db_solicitud.producto_solicitado = "Tarjeta de Crédito Oro"
-                db_solicitud.limite_credito = ingreso * 1.5
+                db_solicitud.limite_credito = ingreso * 1.0  # Conservador: 1.0x (vs 1.5x)
             else:
                 db_solicitud.producto_solicitado = "Tarjeta de Crédito Básica"
-                db_solicitud.limite_credito = ingreso * 1.0
+                db_solicitud.limite_credito = ingreso * 0.8  # Conservador: 0.8x (vs 1.0x)
 
     db.commit()
     db.refresh(db_solicitud)

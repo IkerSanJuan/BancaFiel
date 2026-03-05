@@ -33,7 +33,7 @@ def predecir_riesgo(ingreso_neto: float, antiguedad_meses: int, edad_anios: int,
     score = round(prob_malo * 100, 2)
     
     # Logic para la app
-    if prediction == 0 and score < 40.0:
+    if prediction == 0 and score <= 20.0:
         return score, RecomendacionIA.PRE_APROBADA
     else:
         return score, RecomendacionIA.REVISION_MANUAL
